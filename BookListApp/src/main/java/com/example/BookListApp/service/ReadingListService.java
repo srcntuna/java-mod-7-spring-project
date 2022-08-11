@@ -38,7 +38,7 @@ public class ReadingListService {
 
     }
 
-    public UserResponseDTO createReadingList(CreateReadingListDTO createReadingListDTO, Integer user_id) {
+    public UserResponseDTO createReadingList( Integer user_id, CreateReadingListDTO createReadingListDTO) {
         ReadingList readingList = new ReadingList();
 
         User user = userService.findUserById(user_id);
