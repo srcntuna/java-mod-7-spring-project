@@ -1,0 +1,47 @@
+package com.example.BookListApp.service;
+
+import com.example.BookListApp.dto.CreateUserDTO;
+import com.example.BookListApp.dto.UserDTO;
+import com.example.BookListApp.dto.UserResponseDTO;
+import com.example.BookListApp.exception.NotFoundException;
+import com.example.BookListApp.model.Book;
+import com.example.BookListApp.model.User;
+import com.example.BookListApp.repository.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class UserService {
+
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper mapper;
+
+    public UserDTO create(CreateUserDTO createUserDTO) {
+        User user = mapper.map(createUserDTO, User.class);
+        return mapper.map(userRepository.save(user), UserDTO.class);
+    }
+
+    public void deleteById(Integer id) {
+        if(userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        }
+        else {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    public User findUserById(Integer id){
+
+        return userRepository.findById(id).orElseThrow(()->new NotFoundException("User not found"));
+
+    }
+
+
+}
