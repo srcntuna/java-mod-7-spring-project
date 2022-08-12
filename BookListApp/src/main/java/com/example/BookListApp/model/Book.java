@@ -44,7 +44,7 @@ public class Book {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Author author;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(name = "book_genres",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
