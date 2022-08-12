@@ -3,6 +3,8 @@ package com.example.BookListApp.model;
 import com.example.BookListApp.dto.GenreDTO;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -36,6 +38,7 @@ public class Book {
     private LocalDateTime published;
 
     @ManyToMany(mappedBy = "books")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ReadingList> readingLists = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
