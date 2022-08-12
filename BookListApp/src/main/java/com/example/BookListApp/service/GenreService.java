@@ -26,7 +26,7 @@ public class GenreService {
     public List<GenreResponseWithBooksDTO> getAllGenres() {
         return genreRepository.findAll()
                 .stream()
-                .map(book -> mapper.map(book, GenreResponseWithBooksDTO.class))
+                .map(genre -> mapper.map(genre, GenreResponseWithBooksDTO.class))
                 .toList();
     }
 
@@ -37,6 +37,8 @@ public class GenreService {
     }
 
     public GenreResponseDTO createGenre(CreateGenreDTO createGenreDTO){
+
+        createGenreDTO.setName(createGenreDTO.getName().toLowerCase());
 
         Genre genre = mapper.map(createGenreDTO, Genre.class);
         genre.setBooks(new ArrayList<>());

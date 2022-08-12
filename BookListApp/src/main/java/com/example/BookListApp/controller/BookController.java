@@ -21,11 +21,14 @@ public class BookController {
 
     @GetMapping("/books")
     public List<BookDTO> getAllBooks() {
-        return bookService.getAllBooks();
+
+            return bookService.getAllBooks();
+
+
     }
 
     @GetMapping("/books/{id}")
-    public BookResponseDTO findBookById(@PathVariable Integer id) {
+    public BookResponseDTO findBookById( @PathVariable  Integer id) {
         return bookService.findBookById(id);
     }
 
@@ -50,5 +53,9 @@ public class BookController {
         return bookService.getAllBooksByGenreId(id);
     }
 
+    @GetMapping(value = "/books/title/{title}")
+    public BookResponseDTO findBookByTitle(@PathVariable String title) {
+        return bookService.findBookByTitle(title);
+    }
 
 }

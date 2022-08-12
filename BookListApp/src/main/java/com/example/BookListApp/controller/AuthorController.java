@@ -1,5 +1,6 @@
 package com.example.BookListApp.controller;
 
+import com.example.BookListApp.dto.AuthorDTO;
 import com.example.BookListApp.dto.BookDTO;
 import com.example.BookListApp.model.Author;
 import com.example.BookListApp.service.AuthorService;
@@ -19,7 +20,7 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping("/authors")
-    public List<Author> getAllBooks() {
+    public List<AuthorDTO> getAllBooks() {
         return authorService.getAllAuthors();
     }
 

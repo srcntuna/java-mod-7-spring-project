@@ -1,5 +1,6 @@
 package com.example.BookListApp.service;
 
+import com.example.BookListApp.dto.AuthorDTO;
 import com.example.BookListApp.dto.BookDTO;
 import com.example.BookListApp.model.Author;
 import com.example.BookListApp.repository.AuthorRepository;
@@ -8,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,16 +22,20 @@ public class AuthorService {
     @Autowired
     private ModelMapper mapper;
 
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
+    public List<AuthorDTO> getAllAuthors() {
+
+        return authorRepository.findAll()
+                .stream()
+                .map(author -> mapper.map(author, AuthorDTO.class))
+                .toList();
     }
 
     public Author getAuthor(String name){
 
-        Author author = authorRepository.findByName(name);
+        Author author = authorRepository.findByName(name.toLowerCase());
 
         if(author == null){
-            return Author.builder().name(name).build();
+            return Author.builder().name(name).bookList(new ArrayList<>()).build();
         }
 
         return author;

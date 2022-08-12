@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -21,4 +22,8 @@ public class Author {
 
     @NotNull(message = "name is mandatory")
     private String name;
+
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    private List<Book> bookList;
+
 }

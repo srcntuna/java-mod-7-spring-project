@@ -47,7 +47,7 @@ public class BookService {
 
         BookResponseDTO bookDTO = mapper.map(book,BookResponseDTO.class);
 
-        bookDTO.setAuthor_name(author_Name);
+        bookDTO.setAuthor_name(author_Name.toLowerCase());
 
         return  bookDTO;
 
@@ -56,13 +56,16 @@ public class BookService {
     public BookDTO createBook(CreateBookDTO createBookDTO) {
         System.out.println("hey here!!");
         String authorsName = createBookDTO.getAuthor_name();
+        createBookDTO.setTitle(createBookDTO.getTitle().toLowerCase());
+
         List<Integer> genreIds = createBookDTO.getGenreIds();
 
-        Author author = authorService.getAuthor(authorsName);
+        Author author = authorService.getAuthor(authorsName.toLowerCase());
 
         Book book = mapper.map(createBookDTO, Book.class);
 
         book.setAuthor(author);
+        author.getBookList().add(book);
         List<Genre> genreList = new ArrayList<>();
         genreIds.forEach(id ->{
             Genre genre = genreService.getGenreById(id);
@@ -75,7 +78,7 @@ public class BookService {
     public BookDTO updateBookById(Integer id, UpdateBookDTO newBookDTO){
         Book book = bookRepository.findById(id).orElseThrow(()->new NotFoundException("Book not found"));
 
-        book.setTitle(newBookDTO.getTitle());
+        book.setTitle(newBookDTO.getTitle().toLowerCase());
         book.setPages(newBookDTO.getPages());
 
         return mapper.map(bookRepository.save(book), BookDTO.class);
@@ -102,6 +105,23 @@ public class BookService {
 
     }
 
+    public BookResponseDTO findBookByTitle(String title) {
+
+        System.out.println("this is title :" + title);
+
+
+
+        Book book = bookRepository.findByTitle(title.toLowerCase()).orElseThrow(()->new NotFoundException("Book not found with title "+title));
+
+        String author_Name = book.getAuthor().getName();
+
+        BookResponseDTO bookDTO = mapper.map(book,BookResponseDTO.class);
+
+        bookDTO.setAuthor_name(author_Name);
+
+        return  bookDTO;
+
+    }
 
 
 }
