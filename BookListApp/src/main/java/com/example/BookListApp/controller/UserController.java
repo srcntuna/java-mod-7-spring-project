@@ -6,6 +6,7 @@ import com.example.BookListApp.model.User;
 import com.example.BookListApp.service.BookService;
 import com.example.BookListApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,8 +25,8 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteById(@PathVariable Integer id){
-        userService.deleteById(id);
+    public ResponseEntity<String> deleteById(@PathVariable Integer id){
+      return userService.deleteById(id);
     }
 
 

@@ -6,6 +6,7 @@ import com.example.BookListApp.dto.CreateBookDTO;
 import com.example.BookListApp.dto.UpdateBookDTO;
 import com.example.BookListApp.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,8 +44,8 @@ public class BookController {
     }
 
     @DeleteMapping("/books/{id}")
-    public void deleteById(@PathVariable Integer id) {
-        bookService.deleteById(id);
+    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
+        return bookService.deleteById(id);
     }
 
 

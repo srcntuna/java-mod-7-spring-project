@@ -9,6 +9,8 @@ import com.example.BookListApp.model.User;
 import com.example.BookListApp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,9 +33,10 @@ public class UserService {
         return mapper.map(userRepository.save(user), UserDTO.class);
     }
 
-    public void deleteById(Integer id) {
+    public ResponseEntity<String> deleteById(Integer id) {
         if(userRepository.existsById(id)) {
             userRepository.deleteById(id);
+            return new ResponseEntity<>("Successfully deleted", HttpStatus.OK);
         }
         else {
             throw new NotFoundException("User not found");
