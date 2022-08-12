@@ -8,6 +8,9 @@ import com.example.BookListApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -16,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/users")
-    public UserDTO create(CreateUserDTO createUserDTO){
+    public UserDTO createUser(@Valid @RequestBody CreateUserDTO createUserDTO){
         return userService.create(createUserDTO);
     }
 
@@ -24,4 +27,12 @@ public class UserController {
     public void deleteById(@PathVariable Integer id){
         userService.deleteById(id);
     }
+
+
+    @GetMapping("/users")
+    public List<UserDTO> getAll(){
+        return userService.getAll();
+    }
+
+
 }

@@ -12,5 +12,5 @@ public class UserResponseDTO {
 
     private String username;
 
-    private List<ReadingList> readingList;
+    private List<ReadingListDTO> readingList;
 }

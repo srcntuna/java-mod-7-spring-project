@@ -1,25 +1,25 @@
 package com.example.BookListApp.model;
 
 import com.example.BookListApp.dto.GenreDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Entity
-@Table(name = "books")
+@Entity(name = "books")
+@Table
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @Id
@@ -35,15 +35,13 @@ public class Book {
 
     private LocalDateTime published;
 
-    @ManyToMany(mappedBy = "reading_lists")
+    @ManyToMany(mappedBy = "books")
     private List<ReadingList> readingLists = new ArrayList<>();
 
-    @NotEmpty(message = "author_name is mandatory")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Author author;
 
-    @Size(min = 1, message = "it must have min 1 genre")
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "book_genres",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")

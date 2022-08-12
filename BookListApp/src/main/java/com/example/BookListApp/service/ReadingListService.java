@@ -1,8 +1,8 @@
 package com.example.BookListApp.service;
 
-import com.example.BookListApp.dto.CreateReadingListDTO;
-import com.example.BookListApp.dto.ReadingListDTO;
-import com.example.BookListApp.dto.UserResponseDTO;
+import com.example.BookListApp.dto.*;
+import com.example.BookListApp.exception.NotFoundException;
+import com.example.BookListApp.model.Book;
 import com.example.BookListApp.model.ReadingList;
 import com.example.BookListApp.model.User;
 import com.example.BookListApp.repository.BookRepository;
@@ -10,7 +10,10 @@ import com.example.BookListApp.repository.ReadingListRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,9 @@ public class ReadingListService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -38,11 +44,24 @@ public class ReadingListService {
 
     }
 
-    public UserResponseDTO createReadingList( Integer user_id, CreateReadingListDTO createReadingListDTO) {
-        ReadingList readingList = new ReadingList();
+    public UserResponseDTO createReadingList(@Valid @RequestBody Integer user_id, CreateReadingListDTO createReadingListDTO) {
+
+        System.out.println("Line 45 "+user_id);
+        System.out.println("Line 46 "+createReadingListDTO.getName());
+
+        ReadingList readingList = ReadingList.builder().name(createReadingListDTO.getName()).books(new ArrayList<>()).build();
+
+        List<Integer> bookIds  = createReadingListDTO.getBookIds();
+
+        ReadingList finalReadingList = readingList;
+        bookIds.forEach(bookId ->{
+            Book book = bookRepository.findById(bookId).orElseThrow(()->new NotFoundException("Book with id "+bookId+ " not found"));
+
+            finalReadingList.addBook(book);
+
+        });
 
         User user = userService.findUserById(user_id);
-        readingList.setName(createReadingListDTO.getName());
         readingList.setUser(user);
 
         readingList = readingListRepository.save(readingList);
@@ -51,15 +70,14 @@ public class ReadingListService {
         userResponseDTO.setId(user_id);
         userResponseDTO.setUsername(user.getUsername());
         List<ReadingList> userCurrentList = user.getReadingLists();
-        userCurrentList.add(readingList);
-        userResponseDTO.setReadingList(userCurrentList);
+        userResponseDTO.setReadingList(userCurrentList.stream().map(currList -> mapper.map(currList,ReadingListDTO.class)).collect(Collectors.toList()));
 
         return userResponseDTO;
     }
 
-    public List<ReadingListDTO> getReadingListByUserIdAndReadingListId(Integer user_id,Integer list_id){
+    public List<ReadingListResponseDTO> getReadingListByUserIdAndReadingListId(Integer user_id,Integer list_id){
 
-        return userService.findUserById(user_id).getReadingLists().stream().filter(readingList -> readingList.getId() == list_id).map(readingList -> mapper.map(readingList,ReadingListDTO.class)).toList();
+        return userService.findUserById(user_id).getReadingLists().stream().filter(readingList -> readingList.getId() == list_id).map(readingList -> mapper.map(readingList,ReadingListResponseDTO.class)).toList();
 
     }
 

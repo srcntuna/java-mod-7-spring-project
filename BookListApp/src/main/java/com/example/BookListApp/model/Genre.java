@@ -1,10 +1,10 @@
 package com.example.BookListApp.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +12,18 @@ import java.util.List;
 @Table(name = "genres")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty(message = "name is mandatory")
+    @NotNull(message = "name is mandatory")
     private String name;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany(mappedBy = "genres")
     private List<Book> books = new ArrayList<>();
 }

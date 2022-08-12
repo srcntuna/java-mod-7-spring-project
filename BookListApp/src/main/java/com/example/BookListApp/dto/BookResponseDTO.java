@@ -13,6 +13,6 @@ public class BookResponseDTO {
 
     private String author_name;
 
-    private List<GenreDTO> genreDTOList;
+    private List<GenreDTO> genres;
 
 }

@@ -1,7 +1,6 @@
 package com.example.BookListApp.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -14,6 +13,8 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -28,7 +29,7 @@ public class User {
             = "Password must be between 6 and 100 characters")
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ReadingList> readingLists;
 
 }

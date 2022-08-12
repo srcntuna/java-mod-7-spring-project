@@ -5,12 +5,15 @@ import com.example.BookListApp.dto.BookResponseDTO;
 import com.example.BookListApp.dto.CreateBookDTO;
 import com.example.BookListApp.dto.UpdateBookDTO;
 import com.example.BookListApp.exception.NotFoundException;
+import com.example.BookListApp.model.Author;
 import com.example.BookListApp.model.Book;
+import com.example.BookListApp.model.Genre;
 import com.example.BookListApp.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,9 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private GenreService genreService;
 
     @Autowired
     private ModelMapper mapper;
@@ -45,16 +51,31 @@ public class BookService {
     }
 
     public BookDTO createBook(CreateBookDTO createBookDTO) {
+        System.out.println("hey here!!");
+        String authorsName = createBookDTO.getAuthor_name();
+        List<Integer> genreIds = createBookDTO.getGenreIds();
+
+        Author newAuthor = Author.builder().name(authorsName).build();
+
         Book book = mapper.map(createBookDTO, Book.class);
+
+        book.setAuthor(newAuthor);
+        List<Genre> genreList = new ArrayList<>();
+        genreIds.forEach(id ->{
+            Genre genre = genreService.getGenreById(id);
+            genreList.add(genre);
+        });
+        book.setGenres(genreList);
         return mapper.map(bookRepository.save(book), BookDTO.class);
     }
 
     public BookDTO updateBookById(Integer id, UpdateBookDTO newBookDTO){
         Book book = bookRepository.findById(id).orElseThrow(()->new NotFoundException("Book not found"));
 
-        Book newBook = mapper.map(newBookDTO,Book.class);
+        book.setTitle(newBookDTO.getTitle());
+        book.setPages(newBookDTO.getPages());
 
-        return mapper.map(bookRepository.save(newBook), BookDTO.class);
+        return mapper.map(bookRepository.save(book), BookDTO.class);
 
     }
 
@@ -70,7 +91,11 @@ public class BookService {
 
     public List<BookDTO> getAllBooksByGenreId(Integer genreId) {
 
-        return bookRepository.findBooksbyBooks_genre_id(genreId).stream().map(book -> mapper.map(book,BookDTO.class)).toList();
+        Genre genre = genreService.getGenreById(genreId);
+
+        List<Book> books = genre.getBooks();
+
+        return books.stream().map(book -> mapper.map(book,BookDTO.class)).toList();
 
     }
 
