@@ -27,6 +27,9 @@ public class BookService {
     private GenreService genreService;
 
     @Autowired
+    private  AuthorService authorService;
+
+    @Autowired
     private ModelMapper mapper;
 
     public List<BookDTO> getAllBooks() {
@@ -55,11 +58,11 @@ public class BookService {
         String authorsName = createBookDTO.getAuthor_name();
         List<Integer> genreIds = createBookDTO.getGenreIds();
 
-        Author newAuthor = Author.builder().name(authorsName).build();
+        Author author = authorService.getAuthor(authorsName);
 
         Book book = mapper.map(createBookDTO, Book.class);
 
-        book.setAuthor(newAuthor);
+        book.setAuthor(author);
         List<Genre> genreList = new ArrayList<>();
         genreIds.forEach(id ->{
             Genre genre = genreService.getGenreById(id);

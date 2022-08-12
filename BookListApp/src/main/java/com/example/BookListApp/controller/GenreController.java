@@ -2,6 +2,8 @@ package com.example.BookListApp.controller;
 
 import com.example.BookListApp.dto.CreateGenreDTO;
 import com.example.BookListApp.dto.GenreDTO;
+import com.example.BookListApp.dto.GenreResponseDTO;
+import com.example.BookListApp.dto.GenreResponseWithBooksDTO;
 import com.example.BookListApp.model.Author;
 import com.example.BookListApp.model.Genre;
 import com.example.BookListApp.service.AuthorService;
@@ -20,12 +22,12 @@ public class GenreController {
     private GenreService genreService;
 
     @GetMapping("/genres")
-    public List<GenreDTO> getAllBooks() {
+    public List<GenreResponseWithBooksDTO> getAllGenres() {
         return genreService.getAllGenres();
     }
 
     @PostMapping("/genres")
-    public GenreDTO createGenre(@Valid @RequestBody CreateGenreDTO createGenreDTO){
+    public GenreResponseDTO createGenre(@Valid @RequestBody CreateGenreDTO createGenreDTO){
         return genreService.createGenre(createGenreDTO);
     }
 

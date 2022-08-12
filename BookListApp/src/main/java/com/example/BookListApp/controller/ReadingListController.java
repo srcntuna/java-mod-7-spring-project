@@ -32,7 +32,7 @@ public class ReadingListController {
     }
 
     @GetMapping("/users/{id}/reading_lists/{list_id}")
-    public List<ReadingListResponseDTO> getReadingListByUserIdAndReadingListId(@PathVariable Integer id, @PathVariable Integer list_id){
+    public ReadingListResponseDTO getReadingListByUserIdAndReadingListId(@PathVariable Integer id, @PathVariable Integer list_id){
         return readingListService.getReadingListByUserIdAndReadingListId(id,list_id);
     }
 

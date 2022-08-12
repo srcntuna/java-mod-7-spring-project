@@ -1,9 +1,6 @@
 package com.example.BookListApp.service;
 
-import com.example.BookListApp.dto.BookDTO;
-import com.example.BookListApp.dto.CreateGenreDTO;
-import com.example.BookListApp.dto.GenreDTO;
-import com.example.BookListApp.dto.UserDTO;
+import com.example.BookListApp.dto.*;
 import com.example.BookListApp.exception.NotFoundException;
 import com.example.BookListApp.model.Author;
 import com.example.BookListApp.model.Genre;
@@ -26,10 +23,10 @@ public class GenreService {
     @Autowired
     private ModelMapper mapper;
 
-    public List<GenreDTO> getAllGenres() {
+    public List<GenreResponseWithBooksDTO> getAllGenres() {
         return genreRepository.findAll()
                 .stream()
-                .map(book -> mapper.map(book, GenreDTO.class))
+                .map(book -> mapper.map(book, GenreResponseWithBooksDTO.class))
                 .toList();
     }
 
@@ -39,12 +36,12 @@ public class GenreService {
         return  genre;
     }
 
-    public GenreDTO createGenre(CreateGenreDTO createGenreDTO){
+    public GenreResponseDTO createGenre(CreateGenreDTO createGenreDTO){
 
         Genre genre = mapper.map(createGenreDTO, Genre.class);
         genre.setBooks(new ArrayList<>());
 
-        return mapper.map(genreRepository.save(genre), GenreDTO.class);
+        return mapper.map(genreRepository.save(genre), GenreResponseDTO.class);
 
 
 

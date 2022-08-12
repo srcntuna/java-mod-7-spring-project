@@ -64,6 +64,7 @@ public class ReadingListService {
         User user = userService.findUserById(user_id);
         readingList.setUser(user);
 
+
         readingList = readingListRepository.save(readingList);
 
         UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -75,9 +76,13 @@ public class ReadingListService {
         return userResponseDTO;
     }
 
-    public List<ReadingListResponseDTO> getReadingListByUserIdAndReadingListId(Integer user_id,Integer list_id){
+    public ReadingListResponseDTO getReadingListByUserIdAndReadingListId(Integer user_id,Integer list_id){
 
-        return userService.findUserById(user_id).getReadingLists().stream().filter(readingList -> readingList.getId() == list_id).map(readingList -> mapper.map(readingList,ReadingListResponseDTO.class)).toList();
+        ReadingListResponseDTO readingListResponseDTO =  userService.findUserById(user_id).getReadingLists().stream().filter(readingList -> readingList.getId() == list_id).map(readingList -> mapper.map(readingList,ReadingListResponseDTO.class)).findFirst().orElseThrow(() ->new NotFoundException("Reading list not found with given Ids"));
+
+        readingListResponseDTO.setUser_id(user_id);
+
+        return readingListResponseDTO;
 
     }
 
